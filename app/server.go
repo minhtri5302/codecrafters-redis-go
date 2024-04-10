@@ -31,10 +31,18 @@ func main() {
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
+	buf := make([]byte, 1024)
 	resp := []byte("+PONG\r\n")
 
-	_, err := conn.Write(resp)
-	if err != nil {
-		return
+	for {
+		_, err := conn.Read(buf)
+		if err != nil {
+			return
+		}
+
+		_, err = conn.Write(resp)
+		if err != nil {
+			return
+		}
 	}
 }
